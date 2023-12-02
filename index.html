@@ -3,27 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lady ballers (Mater movies)</title>
+  <title>Mater-Movies</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
       background-color: #141414;
-      overflow: hidden; 
-    }
-
-    #video-container {
-      position: relative;
-      width: 60%; 
-      margin: auto; 
-      overflow: hidden; 
-    }
-
-    #video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      overflow: hidden;
     }
 
     #overlay {
@@ -32,9 +19,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7); 
-      display: none; 
-      pointer-events: none; 
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      pointer-events: none;
     }
 
     #watermark {
@@ -44,7 +31,40 @@
       color: white;
       font-size: 18px;
       opacity: 0.7;
-      pointer-events: none; 
+      pointer-events: none;
+    }
+
+    #vimeo-container {
+      position: relative;
+      width: 60%;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    #vimeo-video {
+      width: 100%;
+      height: 100%;
+    }
+
+    #watermark-box {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 1.6cm;
+      height: 1.6cm;
+      background-color: black;
+      opacity: 1;
+    }
+
+    .fullscreen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 9999;
+      display: none;
     }
   </style>
 </head>
@@ -52,23 +72,44 @@
 
 <div id="overlay"></div>
 
-<div id="video-container">
-  <video id="video" controls>
-    <source src="Movie.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <div id="watermark">Mater-Movies</div>
+<div id="fullscreen-overlay" class="fullscreen-overlay"></div>
+
+<div id="vimeo-container">
+  <div style="padding:56.25% 0 0 0;position:relative;">
+    <iframe
+      id="vimeo-video"
+      src="https://player.vimeo.com/video/890605276?badge=0&amp;autopause=0&amp;quality_selector=1&amp;player_id=0&amp;app_id=58479"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      title="Movie"
+    ></iframe>
+  </div>
+  <div id="watermark-box"></div>
 </div>
 
+<script src="https://player.vimeo.com/api/player.js"></script>
 <script>
-  const video = document.getElementById('video');
   const overlay = document.getElementById('overlay');
+  const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+  const vimeoContainer = document.getElementById('vimeo-container');
+  const vimeoVideo = document.getElementById('vimeo-video');
+  const watermarkBox = document.getElementById('watermark-box');
 
-  video.addEventListener('fullscreenchange', () => {
+  vimeoVideo.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) {
       overlay.style.display = 'none';
+      watermarkBox.style.display = 'none';
+      fullscreenOverlay.style.display = 'none';
     } else {
       overlay.style.display = 'block';
+      watermarkBox.style.display = 'block';
+    }
+  });
+
+  vimeoVideo.addEventListener('mousemove', () => {
+    if (document.fullscreenElement) {
+      fullscreenOverlay.style.display = 'block';
     }
   });
 </script>
